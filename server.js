@@ -10,6 +10,7 @@ const cors = require('cors');
 //this allows us to join front-end and back-end files from different folders
 app.use(cors());
 
+//loads environment variables from .env
 require('dotenv').config();
 
 const PORT = process.env.PORT;
