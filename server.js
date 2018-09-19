@@ -23,6 +23,7 @@ app.get('/location', (request, response) => {
 })
 
 app.get('/weather', getWeather);
+app.get('/yelp', getYelp);
 
 app.listen(PORT, () => console.log(`Listsening on ${PORT}`));
 
@@ -46,17 +47,27 @@ function getWeather (request, response) {
   const url = `https://api.darksky.net/forecast/${process.env.DARK_SKY_API}/${request.query.data.latitude},${request.query.data.longitude}`;
   return superagent.get(url)
     .then((result) => {
-      const weatherSummaries = [];
-      result.body.daily.data.forEach((day) => {
-        const summary = new Weather(day); 
-        weatherSummaries.push(summary);
-      });
-      response.send(weatherSummaries);
+      response.send(result.body.daily.data.map((day) => new Weather(day)));
     })
     .catch(error => handleError(error, response));
 }
 
-function handleError(error, response) {
+function getYelp (request, response) {
+  const url = `https://api.yelp.com/v3/businesses/search?location=${request.query.data.search_query}`;
+
+  superagent.get(url)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then((result) => {
+      const yelpArray = result.body.businesses.map(food => {
+        return new Yelp(food);
+      })
+      response.send(yelpArray);
+    })
+    .catch(error => handleError(error, response));
+}
+
+
+function handleError (error, response) {
   console.error(error);
   if(response) return response.status(500).send('Sorry something went terribly wrong.');
 }
@@ -65,4 +76,12 @@ function handleError(error, response) {
 function Weather (day) {
   this.time = new Date(day.time * 1000).toString().slice(0, 15);
   this.forecast = day.summary;
+}
+
+function Yelp(food) {
+  this.name = food.name;
+  this.image_url = food.image_url;
+  this.price = food.price;
+  this.rating = food.rating;
+  this.url = food.url;
 }
