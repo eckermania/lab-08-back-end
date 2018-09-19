@@ -24,6 +24,7 @@ app.get('/location', (request, response) => {
 
 app.get('/weather', getWeather);
 app.get('/yelp', getYelp);
+app.get('/movies', getMovie);
 
 app.listen(PORT, () => console.log(`Listsening on ${PORT}`));
 
@@ -66,6 +67,16 @@ function getYelp (request, response) {
     .catch(error => handleError(error, response));
 }
 
+function getMovie (request, response) {
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.THE_MOVIE_DB_API}&query=${request.query.data.search_query}`;
+
+  superagent.get(url)
+    .then((result) => {
+      response.send(result.body.results.map( movie => new Movie(movie)));
+    })
+    .catch(error => handleError(error, response));
+}
+
 
 function handleError (error, response) {
   console.error(error);
@@ -78,10 +89,20 @@ function Weather (day) {
   this.forecast = day.summary;
 }
 
-function Yelp(food) {
+function Yelp (food) {
   this.name = food.name;
   this.image_url = food.image_url;
   this.price = food.price;
   this.rating = food.rating;
   this.url = food.url;
+}
+
+function Movie (film) {
+  this.title = film.title;
+  this.overview = film.overview;
+  this.average_votes = film.vote_average;
+  this.total_votes = film.vote_count;
+  this.image_url = `https://image.tmdb.org/t/p/w500${film.poster_path}`;
+  this.popularity = film.popularity;
+  this.released_on = film.release_date;
 }
