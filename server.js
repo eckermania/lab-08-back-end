@@ -22,6 +22,8 @@ app.get('/location', (request, response) => {
     .catch(error => handleError(error, response));
 })
 
+app.get('/weather', getWeather);
+
 app.listen(PORT, () => console.log(`Listsening on ${PORT}`));
 
 //Helper Functions
@@ -40,7 +42,27 @@ function searchToLatLong(query) {
     .catch(error => handleError(error));
 }
 
+function getWeather (request, response) {
+  const url = `https://api.darksky.net/forecast/${process.env.DARK_SKY_API}/${request.query.data.latitude},${request.query.data.longitude}`;
+  return superagent.get(url)
+    .then((result) => {
+      const weatherSummaries = [];
+      result.body.daily.data.forEach((day) => {
+        const summary = new Weather(day); 
+        weatherSummaries.push(summary);
+      });
+      response.send(weatherSummaries);
+    })
+    .catch(error => handleError(error, response));
+}
+
 function handleError(error, response) {
   console.error(error);
   if(response) return response.status(500).send('Sorry something went terribly wrong.');
+}
+
+//Constructors
+function Weather (day) {
+  this.time = new Date(day.time * 1000).toString().slice(0, 15);
+  this.forecast = day.summary;
 }
