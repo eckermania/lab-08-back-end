@@ -7,6 +7,7 @@ const app = express();
 const superagent = require('superagent');
 const cors = require('cors'); 
 
+//this allows us to join front-end and back-end files from different folders
 app.use(cors());
 
 require('dotenv').config();
