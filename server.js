@@ -33,7 +33,7 @@ function getLocation (request, response){
     },
 
     cacheMiss: function () {
-      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${process.env.GOOGLE_API_KEY}`;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.query}&key=${process.env.GOOGLE_API_KEY}`;
       return superagent.get(url)
         .then (result => {
           const location = new Location(this.query, result); 
