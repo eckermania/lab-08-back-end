@@ -1,33 +1,22 @@
-# lab-07-back-end
+# Project Name
 
-**Author**: Jeff Borda and Jessica Lovell
-**Version**: 1.4.0
+**Author**: Erin Eckerman and Jessica Lovell
+**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
 
 ## Overview
-This is the backend to the City Explorer page.  Once the user enters a location, we get information related to that location from the following APIs:
-- Google Maps
-- Dark Sky
-- Yelp
-- The Movie DB
+<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
 
 ## Getting Started
-To use this app, download the [City Explorer](https://github.com/codefellows/seattle-301d38/tree/master/06-node-express-apis) front end application.  This can be run on live-server, connecting to the backend locally or by adding this deployed site's url.
+<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
 
 ## Architecture
-This was coded with JavaScript and Node.js, with the following dependecies:
-- Express
-- Dotenv
-- Superagent
-- Cors
+<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
 
 ## Change Log
-01-19-2016 12:40pm - Application fully functional, now returning movie information from The Movie DB.
+<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
 
-01-19-2016 12:09pm - Yelp API added.
-
-01-19-2016 10:10am - Weather data added using Dark Sky API.
-
-01-19-2016 10:00am - Finished refactoring code from the previous day when the Google Maps API was added.  Now using .map().
+01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
 
 ## Credits and Collaborations
-Jeff Borda and Jessica Lovell and I worked together during all phases of today's development.
+<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+-->
