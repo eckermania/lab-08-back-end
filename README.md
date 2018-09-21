@@ -4,19 +4,16 @@
 **Version**: 1.3.4 (increment the patch/fix version number if you make more commits past your first submission)
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
+This app is intended to provide the user with a high level view of the points of interest for their selected location (state, city, or specific address).  The app will provide the user with a map, weather forecast, restaurant reviews, and movies that are related to the location entered.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+In order to use this app on your own machine,  you must configure the tables for the data within postgres.  You must also set up an .env file that contains your own API keys for Google Maps, Dark Sky, Yelp, and The Movie DB.  The keys for each of these sites must have these labels in your .env file: GOOGLE_API_KEY, DARK_SKY_API, YELP_API_KEY, THE_MOVIE_DB_API. You also need to include a key for the database you establish in your sql shell following this syntax: DATABASE_URL=postgres://localhost:5432/DATABASE_NAME. The site can then either run on the local port or the associated heroku app deployment location.
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+This app has the following dependencies: pg, express, cors, dotenv, and superagent (see package.json file for more information).  These dependencies must be installed via your terminal.
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
-
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
+09-21-2018 11:15 am - refactored code to allow for use of a generic function for lookup and estalished limits for caching data in the database.
 
 ## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
--->
+Thanks to the documentation provided by Google Maps, Dark Sky, Yelp, and The Movie Database.  Additional thanks to Koko Kasa and Sam Hamm for their patient assistance.
