@@ -128,22 +128,38 @@ function getYelp (request, response) {
 }
 
 function getMovie (request, response) {
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.THE_MOVIE_DB_API}&query=${request.query.data.search_query}`;
+  Movie.lookup({
+    tableName: Movie.tableName,
+    cacheMiss: function() {
+      const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.THE_MOVIE_DB_API}&query=${request.query.data.search_query}`;
 
-  superagent.get(url)
-    .then((result) => {
-      response.send(result.body.results.map( movie => new Movie(movie)));
-    })
-    .catch(error => handleError(error, response));
+      superagent.get(url)
+        .then((result) => {
+          const movieSummaries = result.body.results.map( movie => {
+            let summary = new Movie(movie);
+            summary.save(request.query.data.id);
+            return summary;
+          })
+          response.send(movieSummaries);
+        })
+        .catch(error => handleError(error, response));
+    },
+    cacheHit: function (resultsArray) {
+      let ageOfResultsInMinutes = (Date.now() - resultsArray[0].created_at) / (1000*60);
+      if (ageOfResultsInMinutes > 10080){
+        Movie.deleteByLocationId(Movie.tableName, request.query.data.id);
+        this.cacheMiss();
+      } else {
+        response.send(resultsArray);
+      }
+    }
+  });
 }
-
 
 function handleError (error, response) {
   console.error(error);
   if(response) return response.status(500).send('Sorry something went terribly wrong.');
 }
-
-
 
 function deleteByLocationId (table, city) {
   const SQL = `DELETE from ${table} WHERE location_id=${city};`;
@@ -204,8 +220,16 @@ Weather.prototype = {
 
 Yelp.prototype = {
   save: function(location_id){
-    const SQL = `INSERT INTO ${this.tableName} (name, image_url, price, rating, url, location_id) VALUES ($1, $2, $3, $4);`;
+    const SQL = `INSERT INTO ${this.tableName} (name, image_url, price, rating, url, location_id) VALUES ($1, $2, $3, $4, $5);`;
     const values = [this.name, this.image_url, this.price, this.rating, this.url, location_id];
+    client.query(SQL, values);
+  }
+}
+
+Movie.prototype = {
+  save: function(location_id) {
+    const SQL = `INSERT INTO ${this.tableName} (title, overview, average_votes, total_votes, image_url, popularity, released_on, location_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
+    const values = [this.title, this.overview, this.average_votes, this.total_votes, this.image_url, this.popularity, this.released_on, location_id];
     client.query(SQL, values);
   }
 }
